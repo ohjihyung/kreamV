@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org./dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="askBoard">
+	
+	<!-- 게시판 조회 -->
+	<select id="BoardList" resultClass="BoardVO" parameterClass="String"> 
+		select * from board where board_dnm = #board_dnm#
+	</select>
+	
+	<!-- 배송문의 게시글 작성(저장하기) -->
+	<update id="BoardInsert" parameterClass="BoardVO">
+		insert into board (board_num, mem_id, board_title, board_cont, board_nm, board_dnm, board_date)
+        values('DL'||BOARD_SEQ.nextval, #mem_id#, #board_title#, #board_cont#, '문의사항', '상품문의', sysdate)
+	</update>
+		
+	<!-- 배송문의 게시판 수정 -->
+	<update id="UpdateDe" parameterClass="BoardVO">
+		update board 
+			set board_title=#board_title#, board_cont=#board_cont# 
+		where mem_id=#mem_id#
+	</update>
+		
+	<!-- 배송문의 게시판 삭제 -->
+	<delete id="DeleteDe" parameterClass="String">
+		delete from board 
+			where mem_id=#mem_id#
+	</delete>
+		
+	<!-- 배송문의 게시판 상세보기 -->
+	<select id="GetDetailDe" resultClass="BoardVO" parameterClass="String">
+		select * from board where mem_id = #data#
+	</select>
+	
+	
+	<!-- 매니저 게시판 조회 -->
+	<select id="ManaList" resultClass="BoardVO" parameterClass="String">
+		select * from board where board_nm = #board_nm#
+	</select>
+	
+	<!-- 상품문의 게시글 작성(저장하기) -->
+	<insert id="BoardInsert1" parameterClass="BoardVO">
+		insert into board (board_num, mem_id, board_title, board_cont, board_nm, board_dnm, board_date)
+        values('QU'||BOARD_SEQ.nextval, #mem_id#, #board_title#, #board_cont#, '문의사항', '배송문의', sysdate)
+	</insert>
+		
+	<!-- 상품문의 게시판 수정 -->
+	<update id="UpdateQu" parameterClass="BoardVO">
+		update board 
+			set board_title=#board_title#, board_cont=#board_cont# 
+		where mem_id=#mem_id#
+	</update>	
+		
+	<!-- 상품문의 게시판 삭제 -->
+	<delete id="DeleteQu" parameterClass="String">
+		delete from board 
+			where mem_id=#mem_id#
+	</delete>
+		
+	<!-- 상품문의 게시판 상세보기 -->
+	<select id="GetDetailQu" resultClass="BoardVO" parameterClass="String">
+		select * from board where mem_id = #data#
+	</select>
+	
+	
+	
+	
+	
+</sqlMap>

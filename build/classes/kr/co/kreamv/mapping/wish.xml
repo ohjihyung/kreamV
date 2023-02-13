@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="wish">
+
+	<delete id="wishCancelProd" parameterClass="WishVO">
+		delete wish where mem_id=#mem_id# and prod_id = #prod_id#
+	</delete>
+	
+	<select id="wishList" parameterClass="String" resultClass="ProdVO">
+		select * from prod where prod_id in (select prod_id from wish where mem_id=#mem_id#)
+	</select>
+				
+	<insert id="insertWish" parameterClass="WishVO">
+		insert into wish values(WISH_SEQ.nextval, #mem_id#, #prod_id#)
+	</insert>
+			
+	<select id="checkWish" parameterClass="WishVO" resultClass="int">
+		select count(*) from wish where mem_id=#mem_id# and prod_id=#prod_id#
+	</select>
+				
+	<select id="countWish" parameterClass="String" resultClass="int">
+		select count(*) from wish where prod_id=#prod_id#
+	</select>
+				
+	</sqlMap>

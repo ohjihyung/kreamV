@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org./dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="mypageUpdate">
+	
+<update id="updateName" parameterClass="Map">
+	 UPDATE MEMBER
+		SET MEM_NM = #updateName#
+      WHERE MEM_ID = #updateId#
+</update>
+
+<update id="updatePass" parameterClass="Map">
+	 UPDATE MEMBER
+   	    SET MEM_PASS = #updatePass#
+  WHERE MEM_ID = #updateId#
+</update>
+
+<update id="updateHp" parameterClass="Map">
+	 UPDATE MEMBER
+   	    SET MEM_HP = #updateHp#
+      WHERE MEM_ID = #updateId#
+</update>
+
+<update id="updateSize" parameterClass="Map">
+	 UPDATE MEMBER
+   	    SET MEM_SHOES = #updateSize#
+      WHERE MEM_ID = #updateId#
+</update>
+
+<update id="updateImg" parameterClass="SampleMemberVO">
+	 UPDATE MEMBER
+   	    SET MEM_PHOTO = #mem_photo#
+      WHERE MEM_ID = #mem_id#
+</update>
+<update id="deleteImg" parameterClass="Map">
+	 UPDATE MEMBER
+   	    SET MEM_PHOTO = #defaultImage#
+      WHERE MEM_ID = #uid#
+</update>
+	 
+</sqlMap>

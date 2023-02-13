@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 문서는 iBatis에서 처리할 SQL문을 작성하는 문서입니다. -->
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="store">
+
+<!-- 회원의 보관 상품 출력-->
+<select id="checkStore" parameterClass="String" resultClass="int">
+	select count(*) from store where confirm_id in (select confirm_id from confirm where mem_id=#mem_id# and confirm_state=1) and store_state=1
+</select>
+
+<!-- 판매입찰 또는 즉시 판매가 가능한 보관 상품을 꺼내오는 sql문 -->
+<select id="getSellableStore" parameterClass="map" resultClass="SellableVO">
+	select confirm.confirm_id,
+	        confirm.confirm_score,
+	        sell_bid.sell_bid_id,
+	        nvl(sell_bid.sell_bid_price,0) as sell_bid_price,
+	        sell_bid.sell_bid_sdate,
+	        sell_bid.sell_bid_fdate,
+	        store.store_id,
+	        store.bid_check,
+	        store.store_date
+	from store
+	left outer join confirm on store.confirm_id=confirm.confirm_id 
+	left outer join sell_bid on store.confirm_id=sell_bid.confirm_id and sell_bid.sell_bid_state=1
+	where confirm.mem_id=#mem_id# and confirm.detail_id=#detail_id# and store.bid_check in (0,1) and store.store_state=1
+</select>
+
+<!-- 보관테이블의 입찰 여부를 변경하는 sql문 -->
+<update id="updateBidCheck" parameterClass="map">
+	update store set bid_check=#bid_check# where confirm_id=#confirm_id#
+</update>
+
+<update id="updateStoreState" parameterClass="map">
+	update store set store_state=#store_state# where confirm_id=#confirm_id#
+</update>
+
+</sqlMap>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 문서는 iBatis에서 처리할 SQL문을 작성하는 문서입니다. -->
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="sellBid">
+
+<select id="sellBidInfo" parameterClass="String" resultClass="SellBidVO">
+	select * from sellbid where sell_bid_id=#sell_bid_id#
+</select>
+
+<select id="minSellBid" parameterClass="String" resultClass="SellBidVO">
+	select * from(select sell_bid_id, sell_bid_price
+					from sell_bid
+				   where detail_id=#detail_id# and sell_bid_state in(0,1)
+				   order by sell_bid_price)
+	 where rownum=1
+</select>
+
+<select id="getConfirmId" parameterClass="String" resultClass="String">
+	select confirm_id from sell_bid where sell_bid_id=#sell_bid_id#
+</select>
+
+<update id="updateSellBidState" parameterClass="map">
+	update sell_bid set sell_bid_state=to_number(#sell_bid_state#) where sell_bid_id=#sell_bid_id#
+</update>
+
+<!-- 검수 번호를 이용하여 입찰정보를 가져옴 -->
+<select id="getSellBid" parameterClass="String" resultClass="SellBidVO">
+	select * from sell_bid where confirm_id=#confirm_id#
+</select>
+
+<update id="changeSellBid" parameterClass="map">
+	update sell_bid set sell_bid_fdate=#sell_bid_fdate#, 
+						sell_bid_price=#sell_bid_price#,
+						sell_bid_sdate=sysdate 
+	 where confirm_id=#confirm_id#
+</update>
+
+<insert id="insertSellBid" parameterClass="SellBidVO">
+	insert into sell_bid values(SELL_BID_SEQ.nextval, #confirm_id#, #detail_id#, sysdate, #sell_bid_fdate#, #sell_bid_price#, 1)
+</insert>
+
+<delete id="deleteSellBid" parameterClass="String">
+	delete from sell_bid where confirm_id = #confirm_id#
+</delete>
+
+</sqlMap>

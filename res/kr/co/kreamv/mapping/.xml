@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org./dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="join">
+	<update id="insertMember" parameterClass="SampleMemberVO">
+		insert into member(MEM_ID, MEM_PASS, MEM_NM, MEM_BIR, MEM_MAIL, MEM_HP, MEM_ADDR1, MEM_ADDR2, MEM_SHOES, MEM_GEN)
+        values(#mem_id#, #mem_pass#, #mem_nm#, #mem_bir#, #mem_mail#, #mem_hp#, #mem_addr1#, #mem_addr2#, #mem_shoes#, #mem_gen#)
+	</update>
+	
+	<select id="idCheck" parameterClass="String" resultClass="int">
+		select count(*) from member where mem_id = #id#
+	</select>
+	
+</sqlMap>

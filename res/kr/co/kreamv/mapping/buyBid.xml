@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 문서는 iBatis에서 처리할 SQL문을 작성하는 문서입니다. -->
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="buyBid">
+
+<insert id="insertBuyBid" parameterClass="BuyBidVO">
+ 	insert into buy_bid values(BUY_BID_SEQ.nextval, #mem_id#, #detail_id#, sysdate, #buy_bid_fdate#, #buy_bid_price#, 0)
+</insert>
+
+<select id="minBuyBid" parameterClass="String" resultClass="BuyBidVO">
+	select * from(select buy_bid_id, buy_bid_price
+					from buy_bid
+				   where detail_id=#buy_bid_id# and buy_bid_state = 0
+				   order by buy_bid_price desc)
+	 where rownum=1
+</select>
+
+<update id="updateBuyBidState" parameterClass="map">
+	update buy_bid set buy_bid_state=to_number(#buy_bid_state#) where buy_bid_id=#buy_bid_id#
+</update>
+
+<select id="getBuyBidMemId" parameterClass="String" resultClass="String">
+	select mem_id from buy_bid where buy_bid_id=#buy_bid_id#
+</select>
+
+<select id="getBuyBidByOrderId" parameterClass="String" resultClass="BuyBidVO">
+	select * from buy_bid where buy_bid_id=(select buy_bid_id from orders where order_id=#order_id#)
+</select>
+
+</sqlMap>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 문서는 iBatis에서 처리할 SQL문을 작성하는 문서입니다. -->
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="orders">
+
+<insert id="insertOrders" parameterClass="OrdersVO">
+	insert into orders values(ORDERS_SEQ.nextval, #mem_id#, #buy_bid_id#, #sell_bid_id#, #confirm_id#, #order_price#, sysdate, #order_state#)
+</insert>
+
+<update id="updateOrderState" parameterClass="map">
+	update orders set order_date=sysdate, order_state=#order_state# where order_id=#order_id#
+</update>
+
+<select id="getOrders" parameterClass="String" resultClass="OrdersVO">
+	select * from orders where order_id=#order_id#
+</select>
+
+<select id="getMKPrice" parameterClass="String" resultClass="OrdersVO">
+	select order_id, order_price
+	  from( select a.order_id,
+       			   a.order_price
+  	  		  from orders a, confirm b, proddetail c
+		 	 where a.confirm_id=b.confirm_id
+		   	   and b.detail_id=c.detail_id
+		   	   and c.prod_id=#prod_id#
+		   	   and a.order_state=2
+		 	 order by order_id desc)
+ 	 where ROWNUM between 1 and 8
+</select>
+
+</sqlMap>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org./dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="ExaminationManager">
+	
+	<select id="prodList" resultClass="SelectConfirmVO">
+		SELECT  
+		       A.MEM_ID,
+		       A.CONFIRM_ID,
+		       C.PROD_ID,
+		       C.PROD_BRAND,
+		       C.PROD_ENM,
+		       C.PROD_KNM
+		  FROM CONFIRM A, PRODDETAIL B, PROD C
+		 WHERE A.DETAIL_ID=B.DETAIL_ID
+		   AND B.PROD_ID=C.PROD_ID
+		   AND A.CONFIRM_STATE = 0
+	</select>
+	
+	<update id="insertStore" parameterClass="Map">
+		INSERT INTO STORE
+       			 VALUES(STORE_SEQ.NEXTVAL, #confirmId#, SYSDATE, 1, 0)
+	</update>
+	
+	<update id="insertSendBack" parameterClass="Map">
+		INSERT INTO SENDBACK
+       			 VALUES(SENDBACK_SEQ.NEXTVAL, #confirmId#, 0)
+	</update>
+	
+	<update id="confirmUpdate" parameterClass="Map">
+		UPDATE CONFIRM
+		   SET CONFIRM_STATE = 1
+		 WHERE CONFIRM_ID = #confirmId#
+	</update>
+	
+</sqlMap>

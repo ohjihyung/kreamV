@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="prod">
+	
+
+	<select id = "allProdList" resultClass="ProdVO">
+			select * from prod 
+	</select>
+	
+	
+	<select id = "brandProdList" parameterClass="String" resultClass="ProdVO">
+			 select * from prod where prod_brand = #prod_brand#
+	</select>
+	
+
+	<select id = "popularProdList" resultClass="ProdVO">
+			select * from prod order by prod_wish_cnt desc
+	</select>
+
+	<update id = "insertProd" parameterClass="ProdVO">
+         insert into prod values(#prod_id#, #prod_brand#, #prod_enm#, #prod_knm#, 0, #prod_rprice#,
+                            #prod_date#, #prod_rprice#, sysdate, #prod_gen# ,#prod_photo1#, #prod_photo2#,#prod_origin1#,#pcategory_id#,#prod_origin2#)
+                            
+   </update>
+	
+	<delete id = "deleteProd" parameterClass="String" >
+			delete prod where prod_id = #prod_id#
+	</delete>
+	
+	<select id="getProd" parameterClass="String" resultClass="prodVO">
+		select prod_id, prod_brand, prod_enm, prod_knm, to_char(prod_rdate,'yyyy-mm-dd') prod_rdate, prod_photo1, prod_photo2, prod_rprice, prod_mkprice from prod where prod_id=#prod_id#
+	</select>
+	
+	<select id="getProdList" parameterClass="ProdVO" resultClass="ProdVO">
+		select prod_id, prod_brand, prod_enm, prod_knm, to_char(prod_rdate,'yyyy-mm-dd') prod_rdate, prod_photo1, prod_photo2, prod_rprice from prod
+	</select>
+	
+	<select id="newProdList" parameterClass="ProdVO" resultClass="ProdVO">
+		select prod_id, prod_brand, prod_enm, prod_rprice, prod_photo1 from prod order by prod_rdate desc
+	</select>
+	
+	<select id="searchProdList" parameterClass="String" resultClass="prodVO">
+		select prod_id, prod_brand, prod_enm, prod_knm, to_char(prod_rdate,'yyyy-mm-dd') 
+		prod_rdate, prod_photo1, prod_photo2, prod_rprice, prod_mkprice from prod 
+		where prod_brand like '%'||#search#||'%' or prod_knm like '%'||#search#||'%' or prod_enm like '%'||#search#||'%'
+	</select>
+	
+	
+	<select id="menRecommendList" resultClass="ProdVO">
+		select distinct a.prod_id, a.prod_brand, a.prod_enm, a.prod_rprice, a.prod_photo1 
+		from prod a join recommend b 
+		on a.prod_gen = b.rec_gen
+		where a.prod_gen=1 
+        order by a.prod_id
+	</select>
+	
+	<select id="womenRecommendList" parameterClass="ProdVO" resultClass="ProdVO">
+		select distinct a.prod_id, a.prod_brand, a.prod_enm, a.prod_rprice, a.prod_photo1 
+		from prod a join recommend b 
+		on a.prod_gen = b.rec_gen
+		where a.prod_gen=2 
+        order by a.prod_id
+	</select>
+	
+	<update id="prodUpdate" parameterClass="Map">
+		UPDATE PROD
+		   SET PROD_ENM = #newEnm#,
+		        PROD_KNM = #newKnm#,
+		        PROD_PHOTO1 = #fakeName#,
+		        PROD_ORIGIN1 = #filename#
+		 WHERE PROD_ID = #newNum#
+	</update>
+	
+	<update id="prodDelete" parameterClass="String">
+		 DELETE FROM PROD
+ 		  WHERE PROD_ID = #prodId#
+	</update>
+	
+	<select id="highPriceList" resultClass="ProdVO">
+		select * from prod order by prod_rprice desc
+	</select>
+
+	<select id="lowPriceList" resultClass="ProdVO">
+		select * from prod order by prod_rprice asc
+	</select>
+	
+	<update id="updateMKPrice" parameterClass="map" >
+		update prod set prod_mkprice=#prod_mkprice# where prod_id=#prod_id#
+	</update>
+	
+	
+	
+	</sqlMap>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 문서는 iBatis에서 처리할 SQL문을 작성하는 문서입니다. -->
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="gramLike">
+
+<!-- 좋아요 insert -->
+<insert id="likegram" parameterClass = "LikegramVO">
+	insert into GRAM_LIKE values(#gram_num#, #mem_id#)
+</insert>
+
+<!-- 좋아요 select -->
+<select id="likeGramList" parameterClass = "String" resultClass = "LikegramVO">
+	select * from GRAM_LIKE where mem_id = #mem_id# 
+</select>
+
+<select id="getLikeCount" parameterClass="int" resultClass="int">
+	SELECT GRAM_LIKE_CNT
+	  FROM STYLEGRAM
+	 WHERE GRAM_NUM = #gramNum#
+</select>
+
+<update id="minuLike" parameterClass="LikegramVO">
+	delete from gram_like where mem_id = #mem_id# and gram_num = #gram_num#
+</update>
+
+<select id="checkLikeGram" parameterClass="map" resultClass="int">
+	 select count(*)
+	   from gram_like
+	  where gram_num=#gram_num#
+	    and mem_id=#mem_id#
+</select>
+
+</sqlMap>

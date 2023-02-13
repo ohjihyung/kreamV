@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+   PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+   "http://ibatis.apache.org./dtd/sql-map-2.dtd">
+
+<sqlMap namespace="login">
+
+   <select id="config" parameterClass="SampleMemberVO" resultClass="int">         
+         select count(*) from member where mem_id = #mem_id# and mem_pass = #mem_pass#
+         
+   </select>
+   
+   <select id="idFind" parameterClass="Map" resultClass="String">
+         select MEM_MAIL from member where mem_nm = #name# and mem_hp = #hp#
+   </select>
+   
+   <select id="sendMailId" parameterClass="String" resultClass="String">
+      select mem_id from member where mem_mail = #mail#
+   </select>
+   
+   <select id="passFind" parameterClass="Map" resultClass="String">
+      select MEM_MAIL from member where mem_id = #id# and mem_hp = #hp#
+   </select>
+   
+   <select id="sendMailPass" parameterClass="String" resultClass="String">
+      select mem_pass from member where mem_mail = #mail#
+   </select>
+   
+   <select id = "getprofile" parameterClass="String" resultClass="SampleMemberVO">
+      select * from member where mem_id = #mem_id#
+   </select>
+   
+  
+</sqlMap>

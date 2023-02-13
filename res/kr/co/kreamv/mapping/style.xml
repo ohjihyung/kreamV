@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 문서는 iBatis에서 처리할 SQL문을 작성하는 문서입니다. -->
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="style">
+
+<!-- 배송정보에서 구매한 상품 목록 리스트-->
+<!-- 회원id를 파라미터로 받아서 배송받은 상품의 정보를 출력하는 쿼리문  -->
+<select id="stylegramProd" resultClass="ProdVO" parameterClass="String">
+	select B.PROD_ID, c.prod_brand, c.prod_photo1, c.prod_photo2, c.prod_knm 
+      from ORDERS A, DELIVER B, PROD C
+     where A.ORDER_ID = B.order_id
+       and B.PROD_ID = c.prod_id
+       and A.mem_id = #id#
+</select>
+
+<!-- 스타일그램 등록 -->
+<insert id= "stylegramInsert" parameterClass= "hashmap">
+	insert into STYLEGRAM 
+	values(
+		GRAM_SEQ.nextval, #mem_id#, 
+		(select a.deliver_id
+	       from DELIVER A, ORDERS B
+	      where a.order_id = b.order_id
+	        and B.mem_id = #mem_id#
+	        and A.prod_id = #prod_id#), 
+		#gram_photo#, 
+		#gram_cont#, to_date(sysdate, 'YYYY-MM-DD'), 0, 0, #prod_id#)
+</insert>
+
+<!-- 스타일그램 최신 리스트 -->
+<select id="stylegramNewList" resultClass = "styleProdVO">
+	 select A.*, B.*, c.mem_photo
+      from stylegram A, prod B, member C
+     where a.prod_id = b.prod_id
+       and a.mem_id = c.mem_id
+  order by gram_num desc
+</select>
+
+
+<!-- 스타일그램 인기 리스트 -->
+<select id="stylegramHitList" resultClass = "styleProdVO">
+		select A.*, B.*, c.mem_photo
+      from stylegram A, prod B, member C
+     where a.prod_id = b.prod_id
+       and a.mem_id = c.mem_id
+  order by gram_like_cnt desc
+</select>
+
+<!-- 선택한 스타일그램 상세 -->
+<select id="stylegramDetail" resultClass = "styleProdVO" parameterClass="int">
+	select A.*, B.*, c.mem_photo
+      from stylegram A, prod B, member C 
+     where a.prod_id = b.prod_id
+       and a.mem_id = c.mem_id
+       and gram_num = #gram_num#
+</select>
+
+<!-- 선택한 스타일그램의 댓글 리스트 -->
+<select id = "gramReplyList" resultClass = "StylegramReplyVO" parameterClass = "int">
+	select a.*, b.mem_photo
+      from gramreply A, member B
+     where a.mem_id = b.mem_id 
+       and gram_num = #gram_num#
+	 order by A.greply_num
+</select>
+
+<!-- 댓글작성insert -->
+<insert id="insertBoardReply" parameterClass = "hashmap">
+	insert into gramreply 
+	values(GRAMREPLY_SEQ.nextval, #gram_num#, #mem_id#, #greply_cont#)
+</insert>
+
+<select id="stylegramLikeList" parameterClass="String" resultClass = "styleProdVO">
+	select A.*, B.*, c.mem_photo 
+      from stylegram A, prod B, member C
+     where a.prod_id = b.prod_id
+       and a.mem_id = c.mem_id
+       and a.gram_num in (select gram_num from gram_like where mem_id=#mem_id#)
+</select>
+
+</sqlMap>
